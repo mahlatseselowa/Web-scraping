@@ -2,23 +2,11 @@ import urllib
 import requests
 from bs4 import BeautifulSoup as soup
 import os #Automatically make a file and store images in that file.
+from functions import attached_last, attached_first, unattached_first, unattached_last 
 
 os.makedirs("Images", exist_ok = True) #Creates a folder if it does not exist.
 
 URL = 'https://www.game.co.za/game-za/en/All-Game-Categories/Groceries-%26-Household/Groceries/c/G0067?q=%3Arelevance&page='
-
-def unitsplitter(str):
-    possible_units = ["ml","ML", "g", "G", "kg", "KG","PK","Pk","pk"]
-    units = ""
-    size = 0
-    quantity = 1
-    
-    for unit in possible_units:
-        if unit in str:
-            units = unit.lower()
-            
-            return units
-
 
 count = 0
 while count < 11:
@@ -58,22 +46,23 @@ while count < 11:
 		old_price_container = container.findAll("span", {"class":"strikethrough"})
 		old_price = old_price_container[0].text.strip()
 
-		#Ctr+Shift+L
-		#product_units = unitsplitter(brand_name)
+		units, size, actual_product_name = unattached_last(product_name)
+		print("Name ---> " + actual_product_name)
+		print("Price ---> R" + price)
+		print("Size ---> " + size + units)
+		print(" ")
 
-	
-		print("Downloading Image %s..." % (product_image)) 
-		res = requests.get(product_image)
-		if res.ok:
-			Open the directory and store the image.
-			image_name = product_name + ".jpg"
-			f = open(os.path.join("Images", os.path.basename(image_name)), "wb")
-			for chunk in res.iter_content(100000):
-				f.write(chunk)
-			f.close()
+		#print("Downloading Image %s..." % (product_image)) 
+		#res = requests.get(product_image)
+		#if res.ok:
+			#Open the directory and store the image.
+			#image_name = product_name + ".jpg"
+			#f = open(os.path.join("Images", os.path.basename(image_name)), "wb")
+			#for chunk in res.iter_content(100000):
+				#f.write(chunk)
+			#f.close()
 	print("----------> Page " + str(count))
 	print("\n")
 
 print("\n")
 print("Download Finished.")
-
