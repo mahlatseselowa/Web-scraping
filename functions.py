@@ -23,7 +23,7 @@ def attached_last(product_name):
 def attached_first(product_name):
 	#If the units and the size are attached and they appear at the beginning.
 	name_container = product_name.split(' ')
-	units_container = name_container[1]
+	units_container = name_container[0]
 	size = ""
 	units = ""
 
@@ -37,7 +37,7 @@ def attached_first(product_name):
 		elif unit.isnumeric():
 			size += unit
 
-	del name_container[1]
+	del name_container[0]
 	actual_product_name = " ".join(name_container)
 
 	return units, size, actual_product_name
@@ -64,6 +64,32 @@ def unattached_last(product_name):
 	del name_container[-1]
 	del name_container[-1]
 	actual_product_name = " ".join(name_container)
+
+	return units, size, actual_product_name
+
+def appear_middle(product_name):
+	#If the size and the units appear in the anywhere and are attached.
+
+	container = ""
+	units = ""
+	size = ""
+	name_container = product_name.split(' ')
+
+	for unit in name_container:
+		if not unit.isalpha() and not unit.isnumeric():
+			if unit.isalnum():
+				container += unit
+
+
+	for x in container:
+		if ord(x) >= 65 and ord(x) <= 90:
+			units += x
+		elif ord(x) >= 97 and ord(x) <= 122:
+			units += x
+		elif x.isnumeric():
+			size += x
+
+	actual_product_name = " ".join(name_container).replace(container,"")
 
 	return units, size, actual_product_name
  

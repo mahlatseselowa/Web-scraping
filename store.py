@@ -2,7 +2,7 @@ import urllib
 import requests
 from bs4 import BeautifulSoup as soup
 import os #Automatically make a file and store images in that file.
-from functions import attached_last, attached_first, unattached_first, unattached_last 
+from functions import attached_last, attached_first, unattached_first, unattached_last, appear_middle
 
 os.makedirs("Images", exist_ok = True) #Creates a folder if it does not exist.
 
