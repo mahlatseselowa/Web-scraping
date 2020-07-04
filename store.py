@@ -2,19 +2,22 @@ import urllib
 import requests
 from bs4 import BeautifulSoup as soup
 import os #Automatically make a file and store images in that file.
+import re
 from functions import attached_last, attached_first, unattached_first, unattached_last, appear_middle
 
 os.makedirs("Images", exist_ok = True) #Creates a folder if it does not exist.
 
-URL = 'https://www.game.co.za/game-za/en/All-Game-Categories/Groceries-%26-Household/Groceries/c/G0067?q=%3Arelevance&page='
+#URL = 'https://www.game.co.za/game-za/en/All-Game-Categories/Groceries-%26-Household/Groceries/c/G0067?q=%3Arelevance&page='
+URL = 'https://www.game.co.za/game-za/en/All-Game-Categories/c/G000?q=%3Arelevance&page='
 
-count = 0
-while count < 11:
-	new_url = URL + str(count)
-	count += 1
+page = 0
+#740
+while page < 15:
+	new_url = URL + str(page)
+	page += 1
 
 	user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
-	request = urllib.request.Request(new_url,headers={'User-Agent': user_agent})
+	request = urllib.request.Request(new_url, headers={'User-Agent': user_agent})
 
 	#Opening a connection and grabbing the page/request access to the url.
 	response = urllib.request.urlopen(request)
@@ -24,7 +27,7 @@ while count < 11:
 	#Parses the html.
 	page_soup = soup(page_html, "html.parser")
 
-	#Grabs each product.
+	#Grabs each product container.
 	containers = page_soup.findAll("div", {"class": "product-item productListerGridDiv"})
 
 	#Loop through each container and grab neccessary data.
@@ -46,7 +49,7 @@ while count < 11:
 		old_price_container = container.findAll("span", {"class":"strikethrough"})
 		old_price = old_price_container[0].text.strip()
 
-		units, size, actual_product_name = unattached_last(product_name)
+		units, size, actual_product_name = appear_middle(product_name)
 		print("Name ---> " + actual_product_name)
 		print("Price ---> R" + price)
 		print("Size ---> " + size + units)
@@ -61,8 +64,8 @@ while count < 11:
 			#for chunk in res.iter_content(100000):
 				#f.write(chunk)
 			#f.close()
-	print("----------> Page " + str(count))
+	print("----------> Page " + str(page))
 	print("\n")
 
 print("\n")
-print("Download Finished.")
+print("Finished scraping data.")
