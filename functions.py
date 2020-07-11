@@ -75,29 +75,34 @@ def appear_middle(product_name):
 	container = ""
 	units = ""
 	size = ""
+	sub_string = ""
 	name_container = product_name.lower().split(' ')
-	possible_units = ["mg","kg","ml","m","g","pce","Pack","mm","l","Pk","pk","inch","Tb","Pce","l","xl","Pc Set", "Set","Piece","Pair"]
+	possible_units = ["mg","kg","ml","m","g","G","pce","Pack","mm","l","Pk","pk","inch","Tb","Pce","l","xl","Pc Set", "Set","Piece","Pair","Pack"]
 
 	for unit in name_container:
 		if not unit.isalpha() and not unit.isnumeric():
 			if unit.isalnum():
 				container += unit
+				if 'x' in container or 'X' in container:
+					for i in range(0, len(possible_units)):
+						sub_string = possible_units[i]
+						if sub_string in container:
+							size = container.replace(sub_string, "")
+							units = sub_string
+				else:
+					for x in container:
+						for w in range(0, len(possible_units)):
+							if possible_units[w] in container:
+								if ord(x) >= 65 and ord(x) <= 90: #ord(unit)[>=65 & <=90] returns an ascii value of an upper case.
+									units += x
+								elif ord(x) >= 97 and ord(x) <= 122: #ord(unit)[>=65 & <=90] returns an ascii value of an lower case.
+									units += x
+								elif x.isnumeric():
+									size += x
 		elif unit.isnumeric():
 			size = unit
 		elif unit in possible_units:
 			units = unit
-
-
-	for x in container:
-		if ord(x) >= 65 and ord(x) <= 90: #ord(unit)[>=65 & <=90] returns an ascii value of an upper case.
-			units += x
-		elif ord(x) >= 97 and ord(x) <= 122: #ord(unit)[>=65 & <=90] returns an ascii value of an lower case.
-			units += x
-		elif x.isnumeric():
-			size += x
-		else:
-			units = ""
-			size = ""
 
 	actual_product_name = " ".join(name_container).replace(container,"")
 
