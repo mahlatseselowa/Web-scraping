@@ -11,8 +11,8 @@ os.makedirs("Images", exist_ok = True) #Creates a folder if it does not exist.
 URL = 'https://www.game.co.za/game-za/en/All-Game-Categories/c/G000?q=%3Arelevance&page='
 
 page = 0
-#740
-while page < 15:
+#As of 7/11/2020 there are 760 pages.
+while page < 6:
 	new_url = URL + str(page)
 	page += 1
 
