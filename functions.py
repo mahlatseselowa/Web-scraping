@@ -210,7 +210,6 @@ def name_splitter(product_name):
 			position = name_container.index(units)
 			size = name_container[position - 1]
 
-
 	actual_product_name = product_name #" ".join(name_container).replace(container, "").capitalize()
 
 	return units, size, actual_product_name

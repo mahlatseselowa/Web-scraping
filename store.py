@@ -12,7 +12,7 @@ URL = 'https://www.game.co.za/game-za/en/All-Game-Categories/c/G000?q=%3Arelevan
 
 page = 0
 #As of 7/11/2020, there are 760 pages.
-while page < 3:
+while page < 13:
 	new_url = URL + str(page)
 	page += 1
 
