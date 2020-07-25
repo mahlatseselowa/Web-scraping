@@ -49,12 +49,10 @@ while page < 3:
 		old_price_container = container.findAll("span", {"class":"strikethrough"})
 		old_price = old_price_container[0].text.strip()
 
-		#units, size, actual_product_name = name_splitter(product_name)
-		# print("Name ---> " + actual_product_name)
-		# print("Price ---> R" + price)
-		# print("Size ---> " + size + units)
-		pos = name_splitter(product_name)
-		print("Position -----> " + pos)
+		units, size, actual_product_name = name_splitter(product_name)
+		print("Name ---> " + actual_product_name)
+		print("Price ---> R" + price)
+		print("Size ---> " + size + units)
 		print(" ")
 
 		#print("Downloading Image %s..." % (product_image)) 
