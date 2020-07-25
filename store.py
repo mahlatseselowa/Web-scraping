@@ -3,7 +3,7 @@ import requests
 from bs4 import BeautifulSoup as soup
 import os #Automatically make a file and store images in that file.
 import re
-from functions import attached_last, attached_first, unattached_first, unattached_last, appear_middle
+from functions import attached_last, attached_first, unattached_first, unattached_last, appear_middle, name_splitter
 
 os.makedirs("Images", exist_ok = True) #Creates a folder if it does not exist.
 
@@ -11,8 +11,8 @@ os.makedirs("Images", exist_ok = True) #Creates a folder if it does not exist.
 URL = 'https://www.game.co.za/game-za/en/All-Game-Categories/c/G000?q=%3Arelevance&page='
 
 page = 0
-#As of 7/11/2020 there are 760 pages.
-while page < 6:
+#As of 7/11/2020, there are 760 pages.
+while page < 13:
 	new_url = URL + str(page)
 	page += 1
 
@@ -49,7 +49,7 @@ while page < 6:
 		old_price_container = container.findAll("span", {"class":"strikethrough"})
 		old_price = old_price_container[0].text.strip()
 
-		units, size, actual_product_name = appear_middle(product_name)
+		units, size, actual_product_name = name_splitter(product_name)
 		print("Name ---> " + actual_product_name)
 		print("Price ---> R" + price)
 		print("Size ---> " + size + units)
