@@ -76,8 +76,10 @@ def appear_middle(product_name):
 	units = ""
 	size = ""
 	sub_string = ""
+	comma = ","
+	full_stop = ""
 	name_container = product_name.lower().split(' ')
-	possible_units = ["mg","kg","ml","m","g","G","pce","Pack","mm","l","Pk","pk","inch","Tb","Pce","l","xl","Pc Set", "Set","Piece","Pair","Pack"]
+	possible_units = ["mg","kg","ml","m","g","mm","pce","Pack","pk","inch","Tb","Pce","l","xl","Pc Set", "Set","Piece","Pair","Pack"]
 
 	for unit in name_container:
 		if not unit.isalpha() and not unit.isnumeric():
@@ -99,26 +101,116 @@ def appear_middle(product_name):
 									units += x
 								elif x.isnumeric():
 									size += x
+
+			elif full_stop in unit or comma in unit:
+				for t in range(0, len(unit)):
+					if ord(unit[t]) >= 65 and ord(unit[t]) <= 90:
+						units += unit[t]
+					elif ord(unit[t]) >= 97 and ord(unit[t]) <= 122:
+						units += unit[t]
+					else:
+						size += unit[t]
+			else:
+				for a in range(0, len(unit)):
+					if unit[a].isnumeric():
+						size += unit[a]
+					elif size == "":
+						units = ""
+					else:
+						units += unit[a]
 		elif unit.isnumeric():
 			size = unit
 		elif unit in possible_units:
 			units = unit
+			position = name_container[name_container.index(units)]
+			size = name_container[name_container.index(position - 1)]
 
-	actual_product_name = " ".join(name_container).replace(container,"")
+	if units == "":
+		size = ""
+	actual_product_name = " ".join(name_container).replace(container,"").capitalize()
 
 	return units, size, actual_product_name
 
-def set_product(product_name):
+def name_splitter(product_name):
 	container = ""
-	name_container = product_name.split(' ')
+	size = ""
+	temp_size = ""
+	units = ""
+	temp_units = ""
+	comma = ","
+	full_stop = "."
+	position = 0
+	container_position = 0
+	variable_x = ""
+	name_container = product_name.lower().split(' ')
+	possible_units = ["kg","mm","ml","m","cm","mg","l","g","Tb","inch","inches","G","ML"]
 
 	for unit in name_container:
-		if not unit.isalpha() or not unit.isnumeric():
+		if not unit.isalpha() and not unit.isnumeric():
 			if unit.isalnum():
 				container = unit
-		else:
-			container = ""
+				#container_position = name_container.index(container)
+				# variable_x = name_container[container_position + 1]
 
-	actual_product_name = " ".join(name_container, "").replace(container, "")
+				# if variable_x == 'x':
+				# 	next_container = name_container[container_position + 2]
+				# 	cont = container + variable_x + next_container
 
-	return container, actual_product_name
+				# 	for z in range(0, len(possible_units)):
+				# 		if possible_units[z] in cont:
+				# 			temp_size = cont.replace(possible_units[z],"")
+				# 			temp_units = possible_units[z]
+
+				# 		for y in range(0, len(possible_units)):
+				# 			if possible_units[y] == temp_units:
+				# 				units = temp_units
+				# 				size = temp_size
+
+				if 'x' in container:
+					for i in range(0, len(possible_units)):
+						if possible_units[i] in container:
+							temp_size = container.replace(possible_units[i], "")
+							temp_units = possible_units[i]
+
+					for d in range(0, len(possible_units)):
+						if possible_units[d] == temp_units:
+							units = temp_units
+							size = temp_size
+				else:
+					for a in range(0, len(container)):
+						if ord(container[a]) >= 65 and ord(container[a]) <= 90:
+							temp_units += container[a]
+						elif ord(container[a]) >= 97 and ord(container[a]) <= 122:
+							temp_units += container[a]
+						else:
+							temp_size += container[a]
+
+					for b in range(0, len(possible_units)):
+						if possible_units[b] == temp_units:
+							units = temp_units
+							size = temp_size
+
+			elif comma in unit or full_stop in unit:
+				for e in range(0, len(unit)):
+					if ord(unit[e]) >= 65 and ord(unit[e]) <= 90:
+						temp_units += unit[e]
+					elif ord(unit[e]) >= 97 and ord(unit[e]) <= 122:
+						temp_units += unit[e]
+					else:
+						temp_size += unit[e]
+
+
+				for c in range(0, len(possible_units)):
+					if possible_units[c] == temp_units:
+						units = temp_units
+						size = temp_size 
+
+		elif unit in possible_units:
+			units = unit
+			position = name_container.index(units)
+			size = name_container[position - 1]
+
+
+	actual_product_name = product_name #" ".join(name_container).replace(container, "").capitalize()
+
+	return units, size, actual_product_name
