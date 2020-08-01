@@ -10,18 +10,17 @@ from functions import name_splitter
 os.makedirs("Images", exist_ok = True) #Creates a folder if it does not exist.
 
 try:
-	#URL = 'https://www.game.co.za/game-za/en/All-Game-Categories/Groceries-%26-Household/Groceries/c/G0067?q=%3Arelevance&page='
-	URL = 'https://www.game.co.za/gamessssss-za/en/Alls-Game-Categories/c/G000?q=%3Arelevance&page='
+	URL = 'https://www.game.co.za/game-za/en/All-Game-Categories/c/G000?q=%3Arelevance&page='
 except HTTPError as e:
 	print(e)
 except URLERROR as e:
 	print("Server could not be found.")
 else: 
 	page = 0 #As of 8/1/2020, there are 806 pages.
-	#filename = "Game.csv"
-	#file = open(filename, "w")
-	#headers = "Brand Name, Product Name, Price, Size, Units\n"
-	#file.write(headers)
+	filename = "Game.csv"
+	file = open(filename, "w")
+	headers = "Brand Name, Product Name, Price, Size, Units\n"
+	file.write(headers)
 
 	while page < 1:
 		new_url = URL + str(page)
@@ -57,8 +56,15 @@ else:
 			price = price_container[0].text.replace("R","")
 
 			#Not needed.
-			old_price_container = container.findAll("span", {"class":"strikethrough"})
-			old_price = old_price_container[0].text.strip()
+			old_price_container = ""
+			old_price = "" 
+
+			#Not needed.
+			try:
+				old_price_container = container.findAll("span", {"class":"strikethrough"})
+				old_price = old_price_container[0].text.strip()
+			except:
+				pass
 
 			units, size, name = name_splitter(product_name)
 			print("Name ---> " + name)
@@ -67,20 +73,20 @@ else:
 			print(" ")
 
 			#print("Downloading Image %s..." % (product_image)) 
-			#res = requests.get(product_image)
-			#if res.ok:
-				#Open the directory and store the image.
-				#image_name = product_name + ".jpg"
-				#f = open(os.path.join("Images", os.path.basename(image_name)), "wb")
-				#for chunk in res.iter_content(100000):
+			res = requests.get(product_image)
+			if res.ok:
+				Open the directory and store the image.
+				image_name = product_name + ".jpg"
+				f = open(os.path.join("Images", os.path.basename(image_name)), "wb")
+				for chunk in res.iter_content(100000):
 					#f.write(chunk)
-				#f.close()
+				f.close()
 
-			#Stoing the data into tha file.
-			#file.write(brand_name + ", " + name + "," + price + "," + size + "," + units + "\n")
+			Stoing the data into tha file.
+			file.write(brand_name + ", " + name + "," + price + "," + size + "," + units + "\n")
 
 		print("----------> Page " + str(page))
 		print("\n")
-	#file.close()
+	file.close()
 	print("\n")
 	print("Finished scraping data.")
