@@ -144,34 +144,38 @@ def name_splitter(product_name):
 	plus = "+"
 	position = 0
 	container_position = 0
-	variable_x = ""
+	quantity = 1
 	name_container = product_name.lower().split(' ')
-	possible_units = ["kg","mm","ml","m","cm","mg","l","g","Tb","inch","inches","G","ML"]
+	possible_units = ["kg","mm","ml","m","cm","mg","l","g","Tb","inch","inches","G","ML","pack","kw","w"]
 
 	for unit in name_container:
 		if not unit.isalpha() and not unit.isnumeric():
 			if unit.isalnum():
 				container = unit
-				#container_position = name_container.index(container)
-				#temp = name_container[container_position + 1] #IndexError: list index out of range.
-				list_cycle = itertools.cycle(name_container)
-				temp = next(list_cycle)
+				container_position = name_container.index(container)
+				try:
+					temp = name_container[container_position + 1] 
+					#list_cycle = itertools.cycle(name_container)
+					#temp = next(list_cycle)
 
-				if temp == 'x':
-					next_container = name_container[container_position + 2]
-					temp_container = container + 'x' + next_container
+					if temp == 'x':
+						next_container = name_container[container_position + 2]
+						temp_container = container + 'x' + next_container
 
-					for r in range(0, len(possible_units)):
-						if possible_units[r] in temp_container:
-							temp_size = temp_container.replace(possible_units[r], "")
-							temp_units = possible_units[r]
+						for r in range(0, len(possible_units)):
+							if possible_units[r] in temp_container:
+								temp_size = temp_container.replace(possible_units[r], "")
+								temp_units = possible_units[r]
 
-					for t in range(0, len(possible_units)):
-						if possible_units[t] == temp_units:
-							units = temp_units
-							size = temp_size
+						for t in range(0, len(possible_units)):
+							if possible_units[t] == temp_units:
+								units = temp_units
+								size = temp_size
+						break
+				except IndexError:
+					pass
 				
-				elif 'x' in container:
+				if 'x' in container:
 					for i in range(0, len(possible_units)):
 						if possible_units[i] in container:
 							temp_size = container.replace(possible_units[i], "")
@@ -206,21 +210,18 @@ def name_splitter(product_name):
 
 				for c in range(0, len(possible_units)):
 					if possible_units[c] == temp_units:
-						units = temp_units
+						units = temp_units.replace(plus,"")
 						size = temp_size 
 
 		elif unit in possible_units:
 			units = unit
 			position = name_container.index(units)
 			size_container = name_container[position - 1]
-
-			if size_container.isnumeric():
-				size = size_container
-				units = unit
-			else:
-				size = ""
-				units = ""
+			
+			if size_container.isnumeric() or full_stop in size_container:
+			 	size = size_container
+			 	units = unit
 
 	actual_product_name = product_name #" ".join(name_container).replace(container, "").capitalize()
 
-	return units, size, actual_product_name
+	return units, size, quantity, actual_product_name
