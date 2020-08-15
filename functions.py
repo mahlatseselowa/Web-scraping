@@ -200,18 +200,30 @@ def name_splitter(product_name):
 							size = temp_size
 
 			elif comma in unit or full_stop in unit or hyphen in unit or plus in unit:
-				for e in range(0, len(unit)):
-					if ord(unit[e]) >= 65 and ord(unit[e]) <= 90:
-						temp_units += unit[e]
-					elif ord(unit[e]) >= 97 and ord(unit[e]) <= 122:
-						temp_units += unit[e]
-					else:
-						temp_size += unit[e]
+				if 'x' in unit:
+					for v in range(0, len(possible_units)):
+						if possible_units[v] in unit:
+							temp_units = possible_units[v]
+							temp_size = unit.replace(temp_units, "")
 
-				for c in range(0, len(possible_units)):
-					if possible_units[c] == temp_units:
-						units = temp_units.replace(plus,"")
-						size = temp_size 
+					for n in range(0, len(possible_units)):
+						if possible_units[n] == temp_units:
+							size = temp_size
+							units = temp_units
+
+				else:
+					for e in range(0, len(unit)):
+						if ord(unit[e]) >= 65 and ord(unit[e]) <= 90:
+							temp_units += unit[e]
+						elif ord(unit[e]) >= 97 and ord(unit[e]) <= 122:
+							temp_units += unit[e]
+						else:
+							temp_size += unit[e]
+
+					for c in range(0, len(possible_units)):
+						if possible_units[c] == temp_units:
+							units = temp_units.replace(plus,"")
+							size = temp_size 
 
 		elif unit in possible_units:
 			units = unit

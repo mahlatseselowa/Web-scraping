@@ -11,13 +11,14 @@ os.makedirs("Images", exist_ok = True) #Creates a folder if it does not exist.
 
 URL = 'https://www.game.co.za/game-za/en/All-Game-Categories/c/G000?q=%3Arelevance&page='
 
-page = 0 #As of 01/08/2020, there are 806 pages.
+page = 0 
+total_pages = 806 #As of 01/08/2020, there are 806 pages.
 filename = "Game.csv"
 file = open(filename, "w")
-headers = "Brand Name, Product Name, Price, Size, Units\n"
+headers = "Brand Name, Product Name, Price, Size, Units, Quantity\n"
 file.write(headers)
 
-while page < 806:
+while page < total_pages:
 	new_url = URL + str(page)
 	page += 1
 
@@ -77,7 +78,7 @@ while page < 806:
 				f.write(chunk)
 			f.close()
 
-		Stoing the data into tha file.
+		Storing the data into tha file.
 		file.write(brand_name + ", " + name + "," + price + "," + size + "," + units + "\n")
 
 	print("----------> Page " + str(page))
