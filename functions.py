@@ -186,6 +186,7 @@ def name_splitter(product_name):
 							units = temp_units
 							size = temp_size
 				else:
+					#E.g --> 400ml
 					for a in range(0, len(container)):
 						if ord(container[a]) >= 65 and ord(container[a]) <= 90:
 							temp_units += container[a]
@@ -200,6 +201,7 @@ def name_splitter(product_name):
 							size = temp_size
 
 			elif comma in unit or full_stop in unit or hyphen in unit or plus in unit:
+				#E.g ---> 5.5x200ml
 				if 'x' in unit:
 					for v in range(0, len(possible_units)):
 						if possible_units[v] in unit:
@@ -212,6 +214,7 @@ def name_splitter(product_name):
 							units = temp_units
 
 				else:
+					#E.g ---> 5.5ml
 					for e in range(0, len(unit)):
 						if ord(unit[e]) >= 65 and ord(unit[e]) <= 90:
 							temp_units += unit[e]
@@ -226,6 +229,7 @@ def name_splitter(product_name):
 							size = temp_size 
 
 		elif unit in possible_units:
+			#If units are separated from the size. E.g: 5.5 ml
 			units = unit
 			position = name_container.index(units)
 			size_container = name_container[position - 1]
@@ -237,3 +241,102 @@ def name_splitter(product_name):
 	actual_product_name = product_name #" ".join(name_container).replace(container, "").capitalize()
 
 	return units, size, quantity, actual_product_name
+
+def shoprite_splitter(product_name):
+	size = ""
+	temp_size = ""
+	units = ""
+	temp_units = ""
+	container = ""
+	name_container = product_name.lower().split(' ')
+	possible_units = ["kg","mm","ml","m","cm","mg","l","g","Tb","inch","inches","G","ML","pack","kw","w"]
+
+	for unit in name_container:
+		if not unit.isnumeric() or not unit.isalpha():
+			if unit.isalnum():
+				container = unit
+				temp_position = name_container.index(container)
+
+				try:
+					temp = name_container[temp_position + 1]
+
+					if temp == "x": #E.g 400ml x 12 / 12ml x 400ml
+						next_container = name_container[temp_position + 2]
+
+						if next_container.isnumeric(): #E.g 400ml x 12 [next_container = 12]
+							for a in range(0, len(possible_units)):
+								if possible_units[a] in container:
+									temp_size = container.replace(possible_units[a], "")
+									temp_units = possible_units[a]
+
+							for b in range(0, len(possible_units)):
+								if possible_units[b] == temp_units:
+									units = temp_units
+									size = temp_size
+									quantity = next_container
+
+						else: #12ml x 400ml
+							temp_container = container + temp + next_container
+							for c in range(0, len(possible_units)):
+								if possible_units[c] in temp_container:
+									temp_size = temp_container.replace(possible_units[c], "")
+									temp_units = possible_units[c]
+
+							for d in range(0, len(possible_units)):
+								if possible_units[d] == temp_units:
+									units = temp_units
+									size = temp_size
+
+				except IndexError:
+					pass
+
+				if 'x' in container:
+					temp_position = container.index('x')
+					temp_container = container[temp_position + 1:]
+
+					if not temp_container.isnumeric() and not temp_container.isalpha(): #E.g 12x400ml
+						if temp_container.isalnum():
+							for e in range(0, len(possible_units)):
+								if possible_units[e] in temp_container:
+									temp_size = temp_container.replace(possible_units[e], "")
+									temp_units = possible_units[e]
+									temp_quantity = container[0:temp_position]
+
+							for f in range(0, len(possible_units)):
+								if possible_units[f] == temp_units:
+									units = temp_units
+									size = temp_size
+									quantity = temp_quantity
+
+					elif temp_container.isnumeric(): #E.g 400mlx12
+						temp_con = 'x' + temp_container
+						units_container = container.replace(temp_con, "")
+
+						for h in range(0, len(possible_units)):
+							if possible_units[h] in units_container:
+								temp_size = units_container.replace(possible_units[h], "")
+								temp_units = possible_units[h]
+								temp_quantity = temp_container
+
+						for i in range(0, len(possible_units)):
+							if possible_units[i] == temp_units:
+								size = temp_size
+								units = temp_units
+								quantity = temp_quantity
+
+				else: #E.g 400ml
+					for j in range(0, len(container)):
+						if ord(container[j]) >= 65 and ord(container[j]) <= 90:
+							temp_units += container[j]
+
+						elif ord(container[j]) >= 97 and ord(container[j]) <= 122:
+							temp_units += container[j]
+
+						else:
+							temp_size += container[j]
+
+					for k in range(0, len(possible_units)):
+						if possible_units[k] == temp_units:
+							units = temp_units
+							size = temp_size
+	
