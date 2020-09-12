@@ -7,7 +7,7 @@ import os #Automatically make a file and store images in that file.
 import re
 from functions import name_splitter
 
-os.makedirs("Images", exist_ok = True) #Creates a folder if it does not exist.
+os.makedirs("Game", exist_ok = True) #Creates a folder if it does not exist.
 
 URL = 'https://www.game.co.za/game-za/en/All-Game-Categories/c/G000?q=%3Arelevance&page='
 
@@ -73,17 +73,15 @@ while page < total_pages:
 		if res.ok:
 			Open the directory and store the image.
 			image_name = product_name + ".jpg"
-			f = open(os.path.join("Images", os.path.basename(image_name)), "wb")
+			f = open(os.path.join("Game", os.path.basename(image_name)), "wb")
 			for chunk in res.iter_content(100000):
 				f.write(chunk)
 			f.close()
 
-		Storing the data into tha file.
+		#Storing the data into tha file.
 		file.write(brand_name + ", " + name + "," + price + "," + size + "," + units + "\n")
 
-	print("----------> Page " + str(page))
-	print("\n")
+	print("----------> Page " + str(page) + "\n")
 
 file.close()
-print("\n")
-print("Finished scraping data.")
+print("\nFinished scraping data.")
