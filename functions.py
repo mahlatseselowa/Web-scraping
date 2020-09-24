@@ -120,6 +120,7 @@ def appear_middle(product_name):
 						units = ""
 					else:
 						units += unit[a]
+
 		elif unit.isnumeric():
 			size = unit
 		elif unit in possible_units:
@@ -201,7 +202,7 @@ def name_splitter(product_name):
 							size = temp_size
 
 			elif comma in unit or full_stop in unit or hyphen in unit or plus in unit:
-				#E.g ---> 5.5x200ml
+				#E.g ---> 5.5 x 200ml
 				if 'x' in unit:
 					for v in range(0, len(possible_units)):
 						if possible_units[v] in unit:
@@ -248,19 +249,21 @@ def shoprite_splitter(product_name):
 	units = ""
 	temp_units = ""
 	container = ""
+	quantity = 1
+	full_stop = "."
 	name_container = product_name.lower().split(' ')
-	possible_units = ["kg","mm","ml","m","cm","mg","l","g","Tb","inch","inches","G","ML","pack","kw","w"]
+	possible_units = ["kg","mm","ml","m","cm","mg","l","g","tb","inch","inches","kw","w"]
 
 	for unit in name_container:
-		if not unit.isnumeric() or not unit.isalpha():
-			if unit.isalnum():
+		if not unit.isnumeric() and not unit.isalpha():
+			if unit.isalnum(): #E.g ---> 400ml / 400mlx12 / 12 x 400ml / 400mlx400ml 
 				container = unit
 				temp_position = name_container.index(container)
 
 				try:
 					temp = name_container[temp_position + 1]
 
-					if temp == "x": #E.g 400ml x 12 / 12ml x 400ml
+					if temp == "x": #E.g ---> 400ml x 12 / 12ml x 400ml
 						next_container = name_container[temp_position + 2]
 
 						if next_container.isnumeric(): #E.g 400ml x 12 [next_container = 12]
@@ -275,7 +278,7 @@ def shoprite_splitter(product_name):
 									size = temp_size
 									quantity = next_container
 
-						else: #12ml x 400ml
+						else: #E.g ---> 12ml x 400ml
 							temp_container = container + temp + next_container
 							for c in range(0, len(possible_units)):
 								if possible_units[c] in temp_container:
@@ -287,6 +290,7 @@ def shoprite_splitter(product_name):
 									units = temp_units
 									size = temp_size
 
+							break
 				except IndexError:
 					pass
 
@@ -294,7 +298,7 @@ def shoprite_splitter(product_name):
 					temp_position = container.index('x')
 					temp_container = container[temp_position + 1:]
 
-					if not temp_container.isnumeric() and not temp_container.isalpha(): #E.g 12x400ml
+					if not temp_container.isnumeric() and not temp_container.isalpha(): #E.g ---> 12x400ml
 						if temp_container.isalnum():
 							for e in range(0, len(possible_units)):
 								if possible_units[e] in temp_container:
@@ -308,7 +312,7 @@ def shoprite_splitter(product_name):
 									size = temp_size
 									quantity = temp_quantity
 
-					elif temp_container.isnumeric(): #E.g 400mlx12
+					elif temp_container.isnumeric(): #E.g ---> 400mlx12
 						temp_con = 'x' + temp_container
 						units_container = container.replace(temp_con, "")
 
@@ -324,14 +328,12 @@ def shoprite_splitter(product_name):
 								units = temp_units
 								quantity = temp_quantity
 
-				else: #E.g 400ml
+				else: #E.g ---> 400ml
 					for j in range(0, len(container)):
 						if ord(container[j]) >= 65 and ord(container[j]) <= 90:
 							temp_units += container[j]
-
 						elif ord(container[j]) >= 97 and ord(container[j]) <= 122:
 							temp_units += container[j]
-
 						else:
 							temp_size += container[j]
 
@@ -339,4 +341,65 @@ def shoprite_splitter(product_name):
 						if possible_units[k] == temp_units:
 							units = temp_units
 							size = temp_size
-	
+
+			elif full_stop in unit: #Contains special characters. E.g ---> 5.5kg ATTENTION!!!!!!!!!!!!!!! Fix Me!!!!!
+				for l in range(0, len(unit)):
+					if ord(unit[l]) >= 65 and ord(unit[l]) <= 90:
+						temp_units += unit[l]
+					elif ord(unit[l]) >= 97 and ord(unit[l]) <= 122:
+						temp_units += unit[l]
+					else:
+						temp_size += unit[l]
+
+				for m in range(0, len(possible_units)):
+					if possible_units[m] == temp_units:
+						units = temp_units
+						size = temp_size
+
+		elif unit in possible_units:
+			#If units are separated from the size. E.g: 5.5 ml
+			units = unit
+			position = name_container.index(units)
+			size_container = name_container[position - 1]
+			
+			if size_container.isnumeric() or full_stop in size_container:
+			 	size = size_container
+			 	units = unit
+
+		elif unit.isnumeric():
+			temp_position = name_container.index(unit)
+
+			try:
+				temp = name_container[temp_position + 1]
+
+				if temp == 'x':
+					next_container = name_container[temp_position + 2]
+
+					if not next_container.isalpha() and not next_container.isnumeric():
+						if next_container.isalnum():
+							for n in range(0, len(next_container)):
+								if ord(next_container[n]) >= 65 and ord(next_container[n]) <= 90:
+									temp_units += next_container[n]
+								elif ord(next_container[n]) >= 97 and ord(next_container[n]) <= 122:
+									temp_units += next_container[n]
+								else:
+									temp_size += next_container[n]
+
+							for p in range(0, len(possible_units)):
+								if possible_units[p] == temp_units:
+									size = temp_size
+									units = temp_units
+									quantity = unit
+
+				else:
+					for q in range(0, len(possible_units)):
+						if possible_units[q] == temp:
+							units = temp
+							size = unit 
+
+			except IndexError:
+				pass
+
+	actual_product_name = product_name
+
+	return units, size, quantity, actual_product_name
