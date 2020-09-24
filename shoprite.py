@@ -2,10 +2,11 @@ import urllib
 import requests
 from bs4 import BeautifulSoup as soup
 import os
+from functions import shoprite_splitter, name_splitter
 
 os.makedirs("Shoprite", exist_ok = True)
 
-url = 'https://www.shoprite.co.za/c-2256/All-Departments?q=%3Anovelty%3AbrowseAllStoresFacetOff%3AbrowseAllStoresFacetOff&page='
+url = 'https://www.shoprite.co.za/c-2256/All-Departments?q=%3Arelevance%3AbrowseAllStoresFacetOff%3AbrowseAllStoresFacetOff&page='
 #url = 'https://www.shoprite.co.za/c-2256/All-Departments'
 
 page = 0 
@@ -21,7 +22,7 @@ while page < total_pages:
 	page += 1
 
 	user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
-	request = urllib.request.Request(url, headers = {'User_agent':user_agent})
+	request = urllib.request.Request(new_url, headers = {'User_agent':user_agent})
 
 	response = urllib.request.urlopen(request)
 	page_html = response.read()
@@ -41,8 +42,13 @@ while page < total_pages:
 		image_container = container.findAll("div", {"class": "item-product__image"})
 		image_url = 'https://www.shoprite.co.za' + image_container[0].img['data-original-src']
 
-		print("Product Name ----->" + product_name)
+		units, size, quantity, name = shoprite_splitter(product_name)
+
+		print("Product Name ----->" + name)
 		print("Price ------------>" + price)
+		print("Size ------------>" + size)
+		print("Units ------------>" + units)
+		print("Quantity ------------>" + str(quantity))
 		print("Downloading Image %s..." % image_url)
 		print("\n")
 
@@ -58,5 +64,5 @@ while page < total_pages:
 		# #Storing the data into tha file.
 		# file.write(product_name + "," + price + "," + image_url + "\n") 
 	print("page----------> " + str(page) + "\n")
-file.close()
+#file.close()
 print("\nFinished scraping data.")
