@@ -49,8 +49,7 @@ while page < total_pages:
 		print("Size ------------>" + size)
 		print("Units ------------>" + units)
 		print("Quantity ------------>" + str(quantity))
-		print("Downloading Image %s..." % image_url)
-		print("\n")
+		print("Downloading Image %s..." % image_url + "\n")
 
 		# res = requests.get(image_url)
 		# if res.ok:
