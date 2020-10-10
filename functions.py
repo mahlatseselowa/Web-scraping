@@ -252,7 +252,7 @@ def shoprite_splitter(product_name):
 	quantity = 1
 	full_stop = "."
 	name_container = product_name.lower().split(' ')
-	possible_units = ["kg","mm","ml","m","cm","mg","l","g","tb","inch","inches","kw","w"]
+	possible_units = ["kg","mm","ml","mg","cm","tb","kw","inch","inches","m","g","l","w"]
 
 	for unit in name_container:
 		if not unit.isnumeric() and not unit.isalpha():
@@ -329,13 +329,11 @@ def shoprite_splitter(product_name):
 								quantity = temp_quantity
 
 				else: #E.g ---> 400ml
-					for j in range(0, len(container)):
-						if ord(container[j]) >= 65 and ord(container[j]) <= 90:
-							temp_units += container[j]
-						elif ord(container[j]) >= 97 and ord(container[j]) <= 122:
-							temp_units += container[j]
-						else:
-							temp_size += container[j]
+					for j in range(0, len(possible_units)):
+						if possible_units[j] in container:
+							temp_units = possible_units[j]
+							temp_size = container.replace(temp_units, "")
+							break
 					
 					for k in range(0, len(possible_units)):
 						if possible_units[k] == temp_units:
@@ -350,7 +348,6 @@ def shoprite_splitter(product_name):
 
 					if temp == 'x':
 						next_container = name_container[position + 2]
-						temp_container = unit + temp + next_container
 
 						if next_container.isnumeric(): #5.5kg x 20
 							for a in range(0, len(possible_units)):
@@ -366,15 +363,19 @@ def shoprite_splitter(product_name):
 									quantity = temp_quantity
 
 						else: #5.5kg x 20kg
+							temp_container = unit + temp + next_container
 							for i in range(0, len(possible_units)):
 								if possible_units[i] in temp_container:
 									temp_units = possible_units[i]
-									temp_size = temp_container.replace(temp_units, "")
+									temp_size = temp_container.replace(possible_units[i], "")
 
 							for x in range(0, len(possible_units)):
 								if possible_units[x] == temp_units:
 									size = temp_size
 									units = temp_units
+
+							break
+
 				except IndexError:
 					pass
 
@@ -456,7 +457,7 @@ def shoprite_splitter(product_name):
 									size = temp_size
 									units = temp_units
 									quantity = unit
-
+							break
 				else:
 					for q in range(0, len(possible_units)):
 						if possible_units[q] == temp:
