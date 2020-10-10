@@ -37,7 +37,13 @@ while page < total_pages:
 		product_name = name_container[0].h3.text.strip()
 
 		price_container = container.findAll("div", {"class": "special-price__price"})
-		price = price_container[0].span.text.strip().replace("R", "")
+		
+		try:
+			price1 = price_container[0].span.text.strip().replace("R", "")
+			position = price1.index('.')
+			price = price1[0:position + 3]
+		except TypeError:
+			pass
 
 		image_container = container.findAll("div", {"class": "item-product__image"})
 		image_url = 'https://www.shoprite.co.za' + image_container[0].img['data-original-src']
