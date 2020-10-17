@@ -12,11 +12,11 @@ from functions import name_splitter, shoprite_splitter
 URL = 'https://www.game.co.za/game-za/en/All-Game-Categories/c/G000?q=%3Arelevance&page='
 
 page = 0 
-total_pages = 806 #As of 01/08/2020, there are 806 pages.
-# filename = "Game.csv"
-# file = open(filename, "w")
-# headers = "Brand Name, Product Name, Price, Size, Units, Quantity\n"
-# file.write(headers)
+total_pages = 647 #As of 17/10/2020, there are 647 pages.
+filename = "Game.csv"
+file = open(filename, "w")
+headers = "Brand Name, Product Name, Price, Size, Units, Quantity\n"
+file.write(headers)
 
 while page < 10:
 	new_url = URL + str(page)
@@ -70,22 +70,23 @@ while page < 10:
 		print("Name ---> " + name)
 		print("Price ---> R" + price)
 		print("Size ---> " + size + units)
+		print("Quantity ---> " + str(quantity)) 
 		print(" ")
 
 		print("Downloading Image %s..." % (product_image)) 
-		#res = requests.get(product_image)
-		# if res.ok:
-		# 	Open the directory and store the image.
-		# 	image_name = product_name + ".jpg"
-		# 	f = open(os.path.join("Game", os.path.basename(image_name)), "wb")
-		# 	for chunk in res.iter_content(100000):
-		# 		f.write(chunk)
-		# 	f.close()
+		res = requests.get(product_image)
+		if res.ok:
+			Open the directory and store the image.
+			image_name = product_name + ".jpg"
+			f = open(os.path.join("Game", os.path.basename(image_name)), "wb")
+			for chunk in res.iter_content(100000):
+				f.write(chunk)
+			f.close()
 
 		#Storing the data into tha file.
-		#file.write(brand_name + ", " + name + "," + price + "," + size + "," + units + "\n")
+		file.write(brand_name + ", " + name + "," + price + "," + size + "," + units + "\n")
 
 	print("----------> Page " + str(page) + "\n")
 
-#file.close()
+file.close()
 print("\nFinished scraping data.")

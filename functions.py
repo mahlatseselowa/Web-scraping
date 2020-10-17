@@ -467,6 +467,15 @@ def shoprite_splitter(product_name):
 			except IndexError:
 				pass
 
+		elif unit == "pack":
+			position = name_container.index(unit)
+			temp_quantity = name_container[position - 1]
+
+			if temp_quantity.isnumeric():
+				size = ""
+				units = unit
+				quantity = temp_quantity
+
 	actual_product_name = product_name
 
 	return units, size, quantity, actual_product_name
