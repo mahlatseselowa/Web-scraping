@@ -10,11 +10,11 @@ url = 'https://www.shoprite.co.za/c-2256/All-Departments?q=%3Arelevance%3Abrowse
 #url = 'https://www.shoprite.co.za/c-2256/All-Departments'
 
 page = 0 
-#total_pages = 529 #As of 12/09/2020, there are 524 pages.
-# filename = "Shoprite.csv"
-# file = open(filename, "w")
-# headers = "Brand Name, Product Name, Price, Size, Units, Quantity\n"
-# file.write(headers)
+#total_pages = 577 #As of 17/10/2020, there are 577 pages.
+filename = "Shoprite.csv"
+file = open(filename, "w")
+headers = "Brand Name, Product Name, Price, Size, Units, Quantity\n"
+file.write(headers)
 total_pages = 10
 
 while page < total_pages:
@@ -57,17 +57,17 @@ while page < total_pages:
 		print("Quantity ------------>" + str(quantity))
 		print("Downloading Image %s..." % image_url + "\n")
 
-		# res = requests.get(image_url)
-		# if res.ok:
-		# 	#Open the directory and store the image.
-		# 	image_name = product_name + ".jpg"
-		# 	f = open(os.path.join("Shoprite", os.path.basename(image_name)), "wb")
-		# 	for chunk in res.iter_content(100000):
-		# 		f.write(chunk)
-		# 	f.close()
+		res = requests.get(image_url)
+		if res.ok:
+			#Open the directory and store the image.
+			image_name = product_name + ".jpg"
+			f = open(os.path.join("Shoprite", os.path.basename(image_name)), "wb")
+			for chunk in res.iter_content(100000):
+				f.write(chunk)
+			f.close()
 
-		# #Storing the data into tha file.
-		# file.write(product_name + "," + price + "," + image_url + "\n") 
+		#Storing the data into tha file.
+		file.write(name + "," + product_name + "," + price + "," + size + "," + units + "," + str(quantity) + "\n")
 	print("page----------> " + str(page) + "\n")
-#file.close()
+file.close()
 print("\nFinished scraping data.")
