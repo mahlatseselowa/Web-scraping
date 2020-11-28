@@ -252,7 +252,7 @@ def shoprite_splitter(product_name):
 	quantity = 1
 	full_stop = "."
 	name_container = product_name.lower().split(' ')
-	possible_units = ["kg","mm","ml","m","cm","mg","l","g","tb","inch","inches","kw","w"]
+	possible_units = ["kg","mm","ml","mg","cm","tb","kw","inch","inches","m","g","l","w"]
 
 	for unit in name_container:
 		if not unit.isnumeric() and not unit.isalpha():
@@ -329,32 +329,99 @@ def shoprite_splitter(product_name):
 								quantity = temp_quantity
 
 				else: #E.g ---> 400ml
-					for j in range(0, len(container)):
-						if ord(container[j]) >= 65 and ord(container[j]) <= 90:
-							temp_units += container[j]
-						elif ord(container[j]) >= 97 and ord(container[j]) <= 122:
-							temp_units += container[j]
-						else:
-							temp_size += container[j]
-
+					for j in range(0, len(possible_units)):
+						if possible_units[j] in container:
+							temp_units = possible_units[j]
+							temp_size = container.replace(temp_units, "")
+							break
+					
 					for k in range(0, len(possible_units)):
 						if possible_units[k] == temp_units:
 							units = temp_units
 							size = temp_size
 
-			elif full_stop in unit: #Contains special characters. E.g ---> 5.5kg ATTENTION!!!!!!!!!!!!!!! Fix Me!!!!!
-				for l in range(0, len(unit)):
-					if ord(unit[l]) >= 65 and ord(unit[l]) <= 90:
-						temp_units += unit[l]
-					elif ord(unit[l]) >= 97 and ord(unit[l]) <= 122:
-						temp_units += unit[l]
-					else:
-						temp_size += unit[l]
+			elif full_stop in unit: #Contains special characters. E.g ---> 5.5kg / 5.5kg x 20 / 5.5kg
+				position = name_container.index(unit)
 
-				for m in range(0, len(possible_units)):
-					if possible_units[m] == temp_units:
-						units = temp_units
-						size = temp_size
+				try:
+					temp = name_container[position + 1]
+
+					if temp == 'x':
+						next_container = name_container[position + 2]
+
+						if next_container.isnumeric(): #5.5kg x 20
+							for a in range(0, len(possible_units)):
+								if possible_units[a] in unit:
+									temp_units = possible_units[a]
+									temp_size = unit.replace(temp_units, "")
+									temp_quantity = next_container
+
+							for z in range(0, len(possible_units)):
+								if possible_units[z] == temp_units:
+									units = temp_units
+									size = temp_size
+									quantity = temp_quantity
+
+						else: #5.5kg x 20kg
+							temp_container = unit + temp + next_container
+							for i in range(0, len(possible_units)):
+								if possible_units[i] in temp_container:
+									temp_units = possible_units[i]
+									temp_size = temp_container.replace(possible_units[i], "")
+
+							for x in range(0, len(possible_units)):
+								if possible_units[x] == temp_units:
+									size = temp_size
+									units = temp_units
+
+							break
+
+				except IndexError:
+					pass
+
+				if 'x' in unit:
+					position = unit.index('x')
+					cont1 = unit[0:position]
+					cont2 = unit[position + 1:]
+
+					if cont2.isnumeric(): #5.5kgx20
+						for e in range(0, len(possible_units)):
+							if possible_units[e] in cont1:
+								temp_units = possible_units[e]
+								temp_size = cont1.replace(temp_units, "")
+								temp_quantity = cont2
+
+						for t in range(0, len(possible_units)):
+							if possible_units[t] == temp_units:
+								size = temp_size
+								units = temp_units
+								quantity = temp_quantity
+
+					else: #5.5kgx20kg
+						temp_container = cont1 + 'x' + cont2
+						for v in range(0, len(possible_units)):
+							if possible_units[v] in temp_container:
+								temp_units = possible_units[v]
+								temp_units = temp_container.replace(temp_units, "")
+
+						for j in range(0, len(possible_units)):
+							if possible_units[j] == temp_units:
+								size = temp_size
+								units = temp_units
+
+				else: #5.5kg
+					for l in range(0, len(unit)):
+						if ord(unit[l]) >= 65 and ord(unit[l]) <= 90:
+							temp_units += unit[l]
+						elif ord(unit[l]) >= 97 and ord(unit[l]) <= 122:
+							temp_units += unit[l]
+						else:
+							temp_size += unit[l]
+
+					for m in range(0, len(possible_units)):
+						if possible_units[m] == temp_units:
+							units = temp_units
+							size = temp_size
 
 		elif unit in possible_units:
 			#If units are separated from the size. E.g: 5.5 ml
@@ -390,7 +457,7 @@ def shoprite_splitter(product_name):
 									size = temp_size
 									units = temp_units
 									quantity = unit
-
+							break
 				else:
 					for q in range(0, len(possible_units)):
 						if possible_units[q] == temp:
@@ -399,6 +466,15 @@ def shoprite_splitter(product_name):
 
 			except IndexError:
 				pass
+
+		elif unit == "pack":
+			position = name_container.index(unit)
+			temp_quantity = name_container[position - 1]
+
+			if temp_quantity.isnumeric():
+				size = ""
+				units = unit
+				quantity = temp_quantity
 
 	actual_product_name = product_name
 
