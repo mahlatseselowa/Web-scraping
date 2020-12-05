@@ -479,3 +479,20 @@ def shoprite_splitter(product_name):
 	actual_product_name = product_name
 
 	return units, size, quantity, actual_product_name
+
+def makro_splitter(product_name):
+	size =""
+	units = ""
+	quantity = ""
+	possible_units = ["kg","mm","ml","mg","cm","tb","kw","inch","inches","m","g","l","w"]
+
+	bracket_position = product_name.find("(")
+	size_container = product_name[bracket_position:]
+	x_position = size_container.find("x")
+	quantity = size_container[1:x_position -1]
+
+	temp_text = size_container[0: x_position + 2]
+	units_container = size_container.replace(temp_text, "").replace(")", "")
+
+
+	return units_container, quantity
