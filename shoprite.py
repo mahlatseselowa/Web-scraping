@@ -15,7 +15,7 @@ filename = "Shoprite.csv"
 file = open(filename, "w")
 headers = "Brand Name, Product Name, Price, Size, Units, Quantity\n"
 file.write(headers)
-total_pages = 10
+total_pages = 577
 
 while page < total_pages:
 	new_url = url + str(page)
