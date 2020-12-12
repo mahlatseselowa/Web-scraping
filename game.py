@@ -76,7 +76,7 @@ while page < 10:
 		print("Downloading Image %s..." % (product_image)) 
 		res = requests.get(product_image)
 		if res.ok:
-			Open the directory and store the image.
+			#Open the directory and store the image.
 			image_name = product_name + ".jpg"
 			f = open(os.path.join("Game", os.path.basename(image_name)), "wb")
 			for chunk in res.iter_content(100000):
@@ -84,7 +84,7 @@ while page < 10:
 			f.close()
 
 		#Storing the data into tha file.
-		file.write(brand_name + ", " + name + "," + price + "," + size + "," + units + "\n")
+		file.write(name + ", " + name + "," + price + "," + size + "," + units + "," + str(quantity) + "\n")
 
 	print("----------> Page " + str(page) + "\n")
 

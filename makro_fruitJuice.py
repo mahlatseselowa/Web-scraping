@@ -6,10 +6,9 @@ from functions import makro_splitter
 
 os.makedirs("Makro", exist_ok = True)
 
-url = 'https://www.makro.co.za/beverages-liquor/coffee-teas-hot-drinks/coffee/c/JCA?q=%3Arelevance&page='
-
+url = 'https://www.makro.co.za/beverages-liquor/soft-drinks-juices/fruit-juices/c/JDD?q=%3Arelevance&page='
 page = 0 
-total_pages = 8 #As of 12/12/2020, there are 8 pages.
+total_pages = 7 #As of 12/12/2020, there are 7 pages.
 filename = "Makro.csv"
 file = open(filename, "w")
 headers = "Brand Name, Product Name, Price, Size, Units, Quantity\n"
@@ -58,7 +57,7 @@ while page < total_pages:
 					f.write(chunk)
 				f.close()
 
-			#Storing the data into tha file.
+			#Storing the data into tha file. ##Do not forget to include the function for getting the brand Name.
 			file.write(name_container_text + ", " + name_container_text + "," + price + "," + size + "," + units + "," + str(quantity) + "\n")
 			print("\n")
 		except IndexError:
