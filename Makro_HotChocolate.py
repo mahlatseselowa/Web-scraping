@@ -6,10 +6,10 @@ from functions import makro_splitter
 
 os.makedirs("Makro", exist_ok = True)
 
-url = 'https://www.makro.co.za/beverages-liquor/coffee-teas-hot-drinks/coffee/c/JCA?q=%3Arelevance&page='
-
+#url = 'https://www.makro.co.za/beverages-liquor/coffee-teas-hot-drinks/coffee/c/JCA?q=%3Arelevance&page='
+url = 'https://www.makro.co.za/beverages-liquor/coffee-teas-hot-drinks/hot-chocolate/c/JCC?q=%3Arelevance&page='
 page = 0 
-total_pages = 8 #As of 12/12/2020, there are 8 pages.
+total_pages = 2 #As of 12/12/2020, there are 8 pages.
 filename = "Makro.csv"
 file = open(filename, "w")
 headers = "Brand Name, Product Name, Price, Size, Units, Quantity\n"
