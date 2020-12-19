@@ -353,7 +353,7 @@ def makro_splitter(product_name):
 	quantity = ""
 	hyphen = "-"
 	full_stop = "."
-	#possible_units = ["kg","mm","ml","mg","cm","tb","kw","inch","inches","m","g","l","w"]
+	possible_units = ["kg","mm","ml","mg","cm","tb","kw","inch","inches","m","g","l","w"]
 
 	bracket_container = product_name.lower().find("(") #Get the positio of the opening bracket.
 	product_name = product_name.lower()
