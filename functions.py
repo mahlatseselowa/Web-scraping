@@ -355,7 +355,7 @@ def makro_splitter(product_name):
 	full_stop = "."
 	possible_units = ["kg","mm","ml","mg","cm","tb","kw","inch","inches","m","g","l","w"]
 
-	bracket_container = product_name.lower().find("(") #Get the positio of the opening bracket.
+	bracket_container = product_name.lower().find("(") #Get the position of the opening bracket.
 	product_name = product_name.lower()
 	container = product_name[bracket_container:]
 	x_position = container.find("x")
