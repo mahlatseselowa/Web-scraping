@@ -2,7 +2,7 @@ import urllib
 import requests
 from bs4 import BeautifulSoup as soup
 import os
-from functions import makro_splitter, shoprite_splitter
+from functions import shoprite_splitter, mark_splitter
 
 os.makedirs("Makro", exist_ok = True)
 
@@ -42,13 +42,13 @@ while page < total_pages:
 			#print(name + "\t" + image)
 
 			#Fix the price part.
-			price_container = container.findAll("p", {"class":"col-xs-12 price"})
-			temp_price = price_container[0].text.replace("R", "").strip()
-			cents = temp_price[-2:]
-			price = temp_price[0:temp_price.index(cents)] + '.' + cents #fix R45.45. Equal rands and cents.
-			print(price)
+			# price_container = container.findAll("p", {"class":"col-xs-12 price"})
+			# temp_price = price_container[0].text.replace("R", "").strip()
+			# cents = temp_price[-2:]
+			# price = temp_price[0:temp_price.index(cents)] + '.' + cents #fix R45.45. Equal rands and cents.
+			# print(price)
 
-			units, quantity, size, prod_name = shoprite_splitter(name)
+			units, quantity, size, prod_name = mark_splitter(name)
 			#print("Name: " + name + "\nImage: " + image + "\nPrice: R" + price)
 
 			print("Name: " + name + "\nUnits: " + units +  "\nSize: " + str(size) + "\nQuantity: " + str(quantity))
@@ -63,7 +63,7 @@ while page < total_pages:
 				f.close()
 
 			#Storing the data into tha file.
-			file.write(name + ", " + name + "," + price + "," + size + "," + units + "," + str(quantity) + "\n")
+			file.write(name + ", " + name + "," +  "," + str(size) + "," + units + "," + str(quantity) + "\n")
 			print("\n")
 		except IndexError:
 			pass
